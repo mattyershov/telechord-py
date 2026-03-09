@@ -1,11 +1,18 @@
 import scipy
 import scipy.fft
 import numpy as np
+from pydub import AudioSegment
+from pydub.utils import make_chunks
 
 def main():
     sample_rate = 44100
 
     _, input = scipy.io.wavfile.read("outputs/dualsine.wav")
+    input_seg = AudioSegment.from_file("outputs/dualsine.wav", format="wav")
+    chunks = make_chunks(input_seg, 300) #time in ms
+
+    for i, chunk in enumerate(chunks):
+        chunk.export(f"outputs/chunk{i}.wav", format="wav")
         
     N = len(input)
     window = scipy.signal.windows.hann(N)

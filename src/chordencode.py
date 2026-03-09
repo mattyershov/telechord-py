@@ -9,9 +9,22 @@ freq3 = 400
 freq4 = 450
 freq5 = 500
 freq6 = 550
+freq7 = 600
+freq8 = 650
 
 num_samples = max(1, int(rate * duration)) # ensures a non-empty function
 t = np.linspace(0, num_samples / rate, num_samples, endpoint=False)
+
+data = [1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1] # length must be a multiple of 8
+temp = []
+split_data = [][]
+
+count = 1
+for i in range(0, len(data) / 8):
+    temp.append(i)
+    split_data.append(temp)
+
+
 
 car1 = (np.sin(2 * np.pi * freq1 * t)).astype(np.float32)
 car2 = (np.sin(2 * np.pi * freq2 * t)).astype(np.float32)
