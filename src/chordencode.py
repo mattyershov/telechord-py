@@ -24,27 +24,30 @@ def format_data(data:list):
             temp.append(data[j])
         data_split.append(temp)
         temp = []
-    print(data_split)
     return data_split
 
-def encode_chord(data:list, spacing:int, start_af:int=300, rate:int=44100, duration:float=0.3):
+def encode_chord(data:list, start_af:int=300, spacing:int=50, deviation:int=20, rate:int=44100, duration:float=0.5):
     num_samples = max(1, int(rate * duration)) # ensures a non-empty function
     t = np.linspace(0, num_samples / rate, num_samples, endpoint=False)
+    seq = []
 
-    car1 = (np.sin(2 * np.pi * (start_af + spacing*1) * t)).astype(np.float32)
-    car2 = (np.sin(2 * np.pi * (start_af + spacing*2) * t)).astype(np.float32)
-    car3 = (np.sin(2 * np.pi * (start_af + spacing*3) * t)).astype(np.float32)
-    car4 = (np.sin(2 * np.pi * (start_af + spacing*4) * t)).astype(np.float32)
-    car5 = (np.sin(2 * np.pi * (start_af + spacing*5) * t)).astype(np.float32)
-    car6 = (np.sin(2 * np.pi * (start_af + spacing*6) * t)).astype(np.float32)
-    car7 = (np.sin(2 * np.pi * (start_af + spacing*7) * t)).astype(np.float32)
-    car8 = (np.sin(2 * np.pi * (start_af + spacing*8) * t)).astype(np.float32)
+    for byte in data:
+        car1 = (np.sin(2 * np.pi * (start_af + spacing*1 + deviation*byte[0]) * t)).astype(np.float32)
+        car2 = (np.sin(2 * np.pi * (start_af + spacing*2 + deviation*byte[1]) * t)).astype(np.float32)
+        car3 = (np.sin(2 * np.pi * (start_af + spacing*3 + deviation*byte[2]) * t)).astype(np.float32)
+        car4 = (np.sin(2 * np.pi * (start_af + spacing*4 + deviation*byte[3]) * t)).astype(np.float32)
+        car5 = (np.sin(2 * np.pi * (start_af + spacing*5 + deviation*byte[4]) * t)).astype(np.float32)
+        car6 = (np.sin(2 * np.pi * (start_af + spacing*6 + deviation*byte[5]) * t)).astype(np.float32)
+        car7 = (np.sin(2 * np.pi * (start_af + spacing*7 + deviation*byte[6]) * t)).astype(np.float32)
+        car8 = (np.sin(2 * np.pi * (start_af + spacing*8 + deviation*byte[7]) * t)).astype(np.float32)
 
-    data = car1 + car2 + car3 + car4 + car5 + car6 + car7 + car8
-    scipy.io.wavfile.write("outputs/chord.wav", rate, data)
+        tones = car1 + car2 + car3 + car4 + car5 + car6 + car7 + car8
+        seq = np.concatenate((seq, tones))
+    scipy.io.wavfile.write("outputs/chord.wav", rate, seq)
+
 
 def main():
-    format_data(data)
+    encode_chord(format_data(data))
 
 if __name__=="__main__":
     main()
