@@ -7,8 +7,8 @@ from pydub.utils import make_chunks
 def main():
     sample_rate = 44100
 
-    _, input = scipy.io.wavfile.read("outputs/dualsine.wav")
-    input_seg = AudioSegment.from_file("outputs/dualsine.wav", format="wav")
+    _, input = scipy.io.wavfile.read("outputs/chord.wav")
+    input_seg = AudioSegment.from_file("outputs/chord.wav", format="wav")
     chunks = make_chunks(input_seg, 300) #time in ms
 
     for i, chunk in enumerate(chunks):
@@ -21,7 +21,7 @@ def main():
 
     mag = np.abs(fft) # magnitudes of bins
 
-    # freq ranges
+    # freq ranges TODO: change from hardcoded values to values from encode
     f_min1 = 300
     f_max1 = 325
     f_min2 = 350
@@ -34,6 +34,10 @@ def main():
     f_max5 = 525
     f_min6 = 550
     f_max6 = 575
+    f_min7 = 600
+    f_max7 = 625
+    f_min8 = 650
+    f_max8 = 675
 
     # find indices in range
     idx1 = np.where((freqs >= f_min1) & (freqs <= f_max1))[0]
@@ -42,6 +46,8 @@ def main():
     idx4 = np.where((freqs >= f_min4) & (freqs <= f_max4))[0]
     idx5 = np.where((freqs >= f_min5) & (freqs <= f_max5))[0]
     idx6 = np.where((freqs >= f_min6) & (freqs <= f_max6))[0]
+    idx7 = np.where((freqs >= f_min7) & (freqs <= f_max7))[0]
+    idx8 = np.where((freqs >= f_min8) & (freqs <= f_max8))[0]
 
     # dominant frequency in range
     peak_idx1 = idx1[np.argmax(mag[idx1])]
@@ -50,6 +56,9 @@ def main():
     peak_idx4 = idx4[np.argmax(mag[idx4])]
     peak_idx5 = idx5[np.argmax(mag[idx5])]
     peak_idx6 = idx6[np.argmax(mag[idx6])]
+    peak_idx7 = idx7[np.argmax(mag[idx7])]
+    peak_idx8 = idx8[np.argmax(mag[idx8])]
+
 
     detected_freq1 = freqs[peak_idx1]
     detected_freq2 = freqs[peak_idx2]
@@ -57,6 +66,8 @@ def main():
     detected_freq4 = freqs[peak_idx4]
     detected_freq5 = freqs[peak_idx5]
     detected_freq6 = freqs[peak_idx6]
+    detected_freq7 = freqs[peak_idx7]
+    detected_freq8 = freqs[peak_idx8]
 
     # actual values for each freq (frequency that each detected freq is above its range's minimum, all divided by 2 to eliminate amplified changes)
     val1 = (detected_freq1 - f_min1)/2
@@ -65,8 +76,10 @@ def main():
     val4 = (detected_freq1 - f_min4)/2
     val5 = (detected_freq1 - f_min5)/2
     val6 = (detected_freq1 - f_min6)/2
+    val7 = (detected_freq1 - f_min7)/2
+    val8 = (detected_freq1 - f_min8)/2
 
-    print(f"Detected frequencies:\n{detected_freq1:.0f}\n{detected_freq2:.0f}\n{detected_freq3:.0f}\n{detected_freq4:.0f}\n{detected_freq5:.0f}\n{detected_freq6:.0f}")
+    print(f"Detected frequencies:\n{detected_freq1:.0f}\n{detected_freq2:.0f}\n{detected_freq3:.0f}\n{detected_freq4:.0f}\n{detected_freq5:.0f}\n{detected_freq6:.0f}\n{detected_freq7:.0f}\n{detected_freq8:.0f}")
 
 if __name__ == "__main__":
     main()
