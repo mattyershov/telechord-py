@@ -8,10 +8,15 @@ def main():
     sample_rate = 44100
 
     _, input = scipy.io.wavfile.read("outputs/chord.wav")
-    input_seg = AudioSegment.from_file("outputs/chord.wav", format="wav")
-    chunks = make_chunks(input_seg, 300) #time in ms
+    input_seg = AudioSegment.from_file("outputs/chord.wav", format="wav", parameters=["-acodec", "pcm_s16le"])
+    chunks = make_chunks(input_seg, 125) #time in ms
+
+    print(input_seg.sample_width)
+    print(input_seg.frame_rate)
+    print(input_seg.channels)
 
     for i, chunk in enumerate(chunks):
+        chunk = chunk.set_sample_width(2) 
         chunk.export(f"outputs/chunk{i}.wav", format="wav")
         
     N = len(input)
@@ -71,13 +76,13 @@ def main():
 
     # actual values for each freq (frequency that each detected freq is above its range's minimum, all divided by 2 to eliminate amplified changes)
     val1 = (detected_freq1 - f_min1)/2
-    val2 = (detected_freq1 - f_min2)/2
-    val3 = (detected_freq1 - f_min3)/2
-    val4 = (detected_freq1 - f_min4)/2
-    val5 = (detected_freq1 - f_min5)/2
-    val6 = (detected_freq1 - f_min6)/2
-    val7 = (detected_freq1 - f_min7)/2
-    val8 = (detected_freq1 - f_min8)/2
+    val2 = (detected_freq2 - f_min2)/2
+    val3 = (detected_freq3 - f_min3)/2
+    val4 = (detected_freq4 - f_min4)/2
+    val5 = (detected_freq5 - f_min5)/2
+    val6 = (detected_freq6 - f_min6)/2
+    val7 = (detected_freq7 - f_min7)/2
+    val8 = (detected_freq8 - f_min8)/2
 
     print(f"Detected frequencies:\n{detected_freq1:.0f}\n{detected_freq2:.0f}\n{detected_freq3:.0f}\n{detected_freq4:.0f}\n{detected_freq5:.0f}\n{detected_freq6:.0f}\n{detected_freq7:.0f}\n{detected_freq8:.0f}")
 

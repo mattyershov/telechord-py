@@ -1,5 +1,6 @@
 import scipy
 import numpy as np
+import sounddevice as sd
 
 # Old hardcoded frequencies
 # freq1:float=300,
@@ -43,6 +44,8 @@ def encode_chord(data:list, start_af:int=300, spacing:int=50, deviation:int=20, 
 
         tones = (car1 + car2 + car3 + car4 + car5 + car6 + car7 + car8)/2
         seq = np.concatenate((seq, tones))
+    seq_int16 = (seq * 32767).astype(np.int16)
+    sd.play(seq, rate)
     scipy.io.wavfile.write("outputs/chord.wav", rate, seq)
 
 
