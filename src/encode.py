@@ -42,10 +42,10 @@ def encode_chord(data:list, start_af:int=300, spacing:int=50, deviation:int=20, 
         car7 = (np.sin(2 * np.pi * (start_af + spacing*7 + deviation*byte[6]) * t)).astype(np.float32)
         car8 = (np.sin(2 * np.pi * (start_af + spacing*8 + deviation*byte[7]) * t)).astype(np.float32)
 
-        tones = (car1 + car2 + car3 + car4 + car5 + car6 + car7 + car8)/2
+        tones = (car1 + car2 + car3 + car4 + car5 + car6 + car7 + car8)/4
         seq = np.concatenate((seq, tones))
     seq_int16 = (seq * 32767).astype(np.int16)
-    sd.play(seq, rate)
+    sd.play(seq, rate, blocking=True)
     scipy.io.wavfile.write("outputs/chord.wav", rate, seq)
 
 
